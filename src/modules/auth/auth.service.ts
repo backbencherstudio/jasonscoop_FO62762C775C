@@ -263,6 +263,7 @@ export class AuthService extends PrismaClient {
     last_name,
     email,
     password,
+    phoneNumber,
     type,
   }: {
     name: string;
@@ -270,6 +271,7 @@ export class AuthService extends PrismaClient {
     last_name: string;
     email: string;
     password: string;
+    phoneNumber: string;
     type?: string;
   }) {
     try {
@@ -292,6 +294,7 @@ export class AuthService extends PrismaClient {
         last_name: last_name,
         email: email,
         password: password,
+        phone_number: phoneNumber,
         type: type,
       });
 
@@ -321,39 +324,39 @@ export class AuthService extends PrismaClient {
       }
 
       // ----------------------------------------------------
-      // // create otp code
-      // const token = await UcodeRepository.createToken({
-      //   userId: user.data.id,
-      //   isOtp: true,
-      // });
+      // create otp code
+      const token = await UcodeRepository.createToken({
+        userId: user.data.id,
+        isOtp: true,
+      });
 
-      // // send otp code to email
-      // await this.mailService.sendOtpCodeToEmail({
-      //   email: email,
-      //   name: name,
-      //   otp: token,
-      // });
+      // send otp code to email
+      await this.mailService.sendOtpCodeToEmail({
+        email: email,
+        name: name,
+        otp: token,
+      });
 
-      // return {
-      //   success: true,
-      //   message: 'We have sent an OTP code to your email',
-      // };
+      return {
+        success: true,
+        message: 'We have sent an OTP code to your email',
+      };
 
       // ----------------------------------------------------
 
       // Generate verification token
-      const token = await UcodeRepository.createVerificationToken({
-        userId: user.data.id,
-        email: email,
-      });
+      // const token = await UcodeRepository.createVerificationToken({
+      //   userId: user.data.id,
+      //   email: email,
+      // });
 
-      // Send verification email with token
-      await this.mailService.sendVerificationLink({
-        email,
-        name: email,
-        token: token.token,
-        type: type,
-      });
+      // // Send verification email with token
+      // await this.mailService.sendVerificationLink({
+      //   email,
+      //   name: email,
+      //   token: token.token,
+      //   type: type,
+      // });
 
       return {
         success: true,

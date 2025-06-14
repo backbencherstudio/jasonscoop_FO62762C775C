@@ -41,16 +41,16 @@ async function bootstrap() {
 
   // storage setup
   SojebStorage.config({
-    driver: 's3',
+    driver: 'local',
     connection: {
-      // rootUrl: appConfig().storageUrl.rootUrl,
-      // publicUrl: appConfig().storageUrl.rootUrlPublic,
-      awsBucket: appConfig().fileSystems.s3.bucket,
-      awsAccessKeyId: appConfig().fileSystems.s3.key,
-      awsSecretAccessKey: appConfig().fileSystems.s3.secret,
-      awsDefaultRegion: appConfig().fileSystems.s3.region,
-      awsEndpoint: appConfig().fileSystems.s3.endpoint,
-      minio: true,
+      rootUrl: appConfig().storageUrl.rootUrl,
+      publicUrl: appConfig().storageUrl.rootUrlPublic,
+      // awsBucket: appConfig().fileSystems.s3.bucket,
+      // awsAccessKeyId: appConfig().fileSystems.s3.key,
+      // awsSecretAccessKey: appConfig().fileSystems.s3.secret,
+      // awsDefaultRegion: appConfig().fileSystems.s3.region,
+      // awsEndpoint: appConfig().fileSystems.s3.endpoint,
+      // minio: true,
     },
   });
   // prisma setup

@@ -67,9 +67,9 @@ export default () => ({
     // storage directory
     package: '/package/',
     destination: '/destination/',
-    blog: '/blog/',
+    video: '/video/',
+    thumbnail: '/thumbnail/',
     avatar: '/avatar/',
-    websiteInfo: '/website-info/',
     // chat
     attachment: '/attachment/',
   },

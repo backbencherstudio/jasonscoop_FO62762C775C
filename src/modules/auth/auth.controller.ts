@@ -75,11 +75,10 @@ export class AuthController {
       const last_name = data.last_name;
       const email = data.email;
       const password = data.password;
+      const phoneNumber = data.phoneNumber
       const type = data.type;
 
-      if (!name) {
-        throw new HttpException('Name not provided', HttpStatus.UNAUTHORIZED);
-      }
+      
       if (!first_name) {
         throw new HttpException(
           'First name not provided',
@@ -108,6 +107,7 @@ export class AuthController {
         last_name: last_name,
         email: email,
         password: password,
+        phoneNumber:phoneNumber,
         type: type,
       });
 
