@@ -111,7 +111,7 @@ export class ReportService {
           date_to: dto.date_to ? new Date(dto.date_to) : new Date(dto.date_from),
           format: dto.format,
           file_url: fileUrl,
-          status: 1,
+          status: '1',
           report_type: 1,
           created_at: new Date(),
           user_id: data[0].user_id
@@ -171,7 +171,7 @@ export class ReportService {
           date_to: dto.date_to ? new Date(dto.date_to) : new Date(dto.date_from),
           format: dto.format,
           file_url: fileUrl,
-          status: 1,
+          status: '1',
           report_type: 1,
           created_at: new Date(),
           user_id: data[0].customer_id
