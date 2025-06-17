@@ -138,17 +138,26 @@ export class StripePayment {
     currency,
     customer_id,
     metadata,
+    automatic_payment_methods,
   }: {
     amount: number;
     currency: string;
     customer_id: string;
     metadata?: stripe.MetadataParam;
+    automatic_payment_methods?: {
+      enabled: boolean;
+      allow_redirects: 'always' | 'never';
+    };
   }): Promise<stripe.PaymentIntent> {
     return Stripe.paymentIntents.create({
       amount: amount * 100, // amount in cents
       currency: currency,
       customer: customer_id,
       metadata: metadata,
+      automatic_payment_methods: automatic_payment_methods || {
+        enabled: true,
+        allow_redirects: 'never'
+      }
     });
   }
 
@@ -325,12 +334,69 @@ export class StripePayment {
   // }
   // -----------------------payout system end--------------------------------
 
-  static handleWebhook(rawBody: string, sig: string | string[]): stripe.Event {
+  static handleWebhook(rawBody: string | Buffer, sig: string | string[]): stripe.Event {
     const event = Stripe.webhooks.constructEvent(
       rawBody,
       sig,
       STRIPE_WEBHOOK_SECRET,
     );
     return event;
+  }
+
+  static async confirmPayment({
+    paymentIntentId,
+    paymentMethodId,
+  }: {
+    paymentIntentId: string;
+    paymentMethodId: string;
+  }): Promise<stripe.PaymentIntent> {
+    const paymentIntent = await Stripe.paymentIntents.confirm(paymentIntentId, {
+      payment_method: paymentMethodId,
+    });
+    return paymentIntent;
+  }
+
+  static async createSubscription({
+    customerId,
+    priceId,
+    metadata,
+  }: {
+    customerId: string;
+    priceId: string;
+    metadata?: stripe.MetadataParam;
+  }): Promise<stripe.Subscription> {
+    const subscription = await Stripe.subscriptions.create({
+      customer: customerId,
+      items: [{ price: priceId }],
+      payment_behavior: 'default_incomplete',
+      payment_settings: { save_default_payment_method: 'on_subscription' },
+      expand: ['latest_invoice.payment_intent'],
+      metadata: metadata,
+    });
+    return subscription;
+  }
+
+  static async cancelSubscription(subscriptionId: string): Promise<stripe.Subscription> {
+    const subscription = await Stripe.subscriptions.cancel(subscriptionId);
+    return subscription;
+  }
+
+  static async updateSubscription({
+    subscriptionId,
+    priceId,
+  }: {
+    subscriptionId: string;
+    priceId: string;
+  }): Promise<stripe.Subscription> {
+    const subscription = await Stripe.subscriptions.retrieve(subscriptionId);
+    const updatedSubscription = await Stripe.subscriptions.update(subscriptionId, {
+      items: [
+        {
+          id: subscription.items.data[0].id,
+          price: priceId,
+        },
+      ],
+    });
+    return updatedSubscription;
   }
 }

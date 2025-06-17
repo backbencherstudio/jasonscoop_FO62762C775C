@@ -6,7 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { join } from 'path';
 import * as dotenv from 'dotenv';
-// import express from 'express';
+import express from 'express';
 // internal imports
 import { AppModule } from './app.module';
 import { CustomExceptionFilter } from './common/exception/custom-exception.filter';
@@ -18,12 +18,24 @@ import { SojebStorage } from './common/lib/Disk/SojebStorage';
 dotenv.config();
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    rawBody: true,
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // Configure middleware for webhook endpoint
+  app.use('/api/payment/stripe/webhook', express.raw({ type: 'application/json' }), (req, res, next) => {
+    if (req.body) {
+      req.rawBody = req.body;
+    }
+    next();
   });
 
-  // Handle raw body for webhooks
-  // app.use('/payment/stripe/webhook', express.raw({ type: 'application/json' }));
+  // Configure middleware for all other routes
+  app.use((req, res, next) => {
+    if (req.path !== '/api/payment/stripe/webhook') {
+      express.json()(req, res, next);
+    } else {
+      next();
+    }
+  });
 
   app.setGlobalPrefix('api');
   app.enableCors();
