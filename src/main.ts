@@ -6,7 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { join } from 'path';
 import * as dotenv from 'dotenv';
-import express from 'express';
+import * as express from 'express';
 // internal imports
 import { AppModule } from './app.module';
 import { CustomExceptionFilter } from './common/exception/custom-exception.filter';
@@ -18,24 +18,15 @@ import { SojebStorage } from './common/lib/Disk/SojebStorage';
 dotenv.config();
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
-  // Configure middleware for webhook endpoint
-  app.use('/api/payment/stripe/webhook', express.raw({ type: 'application/json' }), (req, res, next) => {
-    if (req.body) {
-      req.rawBody = req.body;
-    }
-    next();
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bodyParser: false, // Disable the built-in body parser
   });
 
-  // Configure middleware for all other routes
-  app.use((req, res, next) => {
-    if (req.path !== '/api/payment/stripe/webhook') {
-      express.json()(req, res, next);
-    } else {
-      next();
-    }
-  });
+  // Configure raw body parser for Stripe webhooks
+  app.use('/api/payment/stripe/webhook', express.raw({ type: 'application/json' }));
+
+  // Configure JSON body parser for all other routes
+  app.use(express.json());
 
   app.setGlobalPrefix('api');
   app.enableCors();

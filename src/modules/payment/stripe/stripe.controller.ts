@@ -48,7 +48,6 @@ export class StripeController {
     @Res() res: Response
   ) {
     try {
-      
       if (!signature) {
         res.status(400).json({ received: false, error: 'No signature found' });
         return;
@@ -59,27 +58,12 @@ export class StripeController {
         return;
       }
 
-      // Convert raw body to string if it's a Buffer
-      const rawBody = Buffer.isBuffer(req.rawBody) ? req.rawBody.toString('utf8') : req.rawBody;
-
-      const event = await this.stripeService.handleWebhook(rawBody, signature);
+      const event = await this.stripeService.handleWebhook(req.rawBody, signature);
 
       // Handle events
       switch (event.type) {
-        // case 'customer.created':
-        //   console.log('Customer Created:', event.data.object);
-        //   break;
-        // case 'payment_intent.created':
-        //   console.log('Payment Intent Created:', event.data.object);
-        //   break;
         case 'payment_intent.succeeded':
           const paymentIntent = event.data.object;
-          // console.log('=== Payment Intent Succeeded ===');
-          // console.log('Payment Intent ID:', paymentIntent.id);
-          // console.log('Amount:', paymentIntent.amount);
-          // console.log('Currency:', paymentIntent.currency);
-          // console.log('Status:', paymentIntent.status);
-          // Update transaction status in database
           await TransactionRepository.updateTransaction({
             reference_number: paymentIntent.id,
             status: 'succeeded',
@@ -87,11 +71,9 @@ export class StripeController {
             paid_currency: paymentIntent.currency,
             raw_status: paymentIntent.status,
           });
-          // console.log('Transaction updated in database');
           break;
         case 'payment_intent.payment_failed':
           const failedPaymentIntent = event.data.object;
-          // console.log('Payment Intent Failed:', failedPaymentIntent);
           await TransactionRepository.updateTransaction({
             reference_number: failedPaymentIntent.id,
             status: 'failed',
@@ -100,7 +82,6 @@ export class StripeController {
           break;
         case 'payment_intent.canceled':
           const canceledPaymentIntent = event.data.object;
-          // console.log('Payment Intent Canceled:', canceledPaymentIntent);
           await TransactionRepository.updateTransaction({
             reference_number: canceledPaymentIntent.id,
             status: 'canceled',
@@ -109,35 +90,19 @@ export class StripeController {
           break;
         case 'payment_intent.requires_action':
           const requireActionPaymentIntent = event.data.object;
-          // console.log('Payment Intent Requires Action:', requireActionPaymentIntent);
           await TransactionRepository.updateTransaction({
             reference_number: requireActionPaymentIntent.id,
             status: 'requires_action',
             raw_status: requireActionPaymentIntent.status,
           });
           break;
-        case 'payout.paid':
-          const paidPayout = event.data.object;
-          // console.log('Payout Paid:', paidPayout);
-          break;
-        case 'payout.failed':
-          const failedPayout = event.data.object;
-          // console.log('Payout Failed:', failedPayout);
-          break;
         default:
-          // console.log(`Unhandled event type ${event.type}`);
+          console.log(`Unhandled event type ${event.type}`);
       }
 
       res.status(200).json({ received: true });
     } catch (error) {
-      // console.error('=== Webhook Error ===');
-      // console.error('Error:', error);
-      // console.error('Error details:', {
-      //   message: error.message,
-      //   type: error.type,
-      //   code: error.code,
-      //   requestId: error.requestId,
-      // });
+      console.error('Webhook Error:', error);
       res.status(400).json({ received: false, error: error.message });
     }
   }
