@@ -24,6 +24,7 @@ import { ManagementModule } from './modules/admin/employee-management/employee-m
 import { LogisticsVerificationModule } from './modules/admin/logistics-verification/logistics-verification.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { TrafficSourcesModule } from './modules/traffic-sources/traffic-sources.module';
+import { HomeModule } from './modules/home/home.module';
 
 
 @Module({
@@ -77,6 +78,7 @@ import { TrafficSourcesModule } from './modules/traffic-sources/traffic-sources.
     LogisticsVerificationModule,
     SettingsModule,
     TrafficSourcesModule,
+    HomeModule,
   ],
   controllers: [AppController],
   providers: [

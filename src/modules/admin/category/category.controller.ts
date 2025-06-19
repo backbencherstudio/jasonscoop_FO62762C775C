@@ -17,6 +17,10 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../common/guard/role/roles.guard';
 import { Roles } from '../../../common/guard/role/roles.decorator';
 import { Role } from '../../../common/guard/role/role.enum';
+import { UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @ApiBearerAuth()
 @ApiTags('Category')
@@ -28,9 +32,24 @@ export class CategoryController {
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Create category' })
   @Post()
-  async create(@Body() createCategoryDto: CreateCategoryDto) {
+  @UseInterceptors(FileInterceptor('image', {
+    storage: diskStorage({
+      destination: './public/storage/categories',
+      filename: (req, file, cb) => {
+        const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
+        return cb(null, `${randomName}${extname(file.originalname)}`);
+      }
+    })
+  }))
+  async create(
+    @Body() createCategoryDto: CreateCategoryDto,
+    @UploadedFile() file: Express.Multer.File
+  ) {
     try {
-      const category = await this.categoryService.create(createCategoryDto);
+      const category = await this.categoryService.create({
+        ...createCategoryDto,
+        image: file?.filename ? `/storage/categories/${file.filename}` : null
+      });
       return category;
     } catch (error) {
       return {

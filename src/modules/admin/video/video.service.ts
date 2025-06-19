@@ -16,27 +16,27 @@ export class VideoService {
         appConfig().storageUrl.video + createVideoDto.videoFile.originalname,
         createVideoDto.videoFile.buffer,
       );
-      const videoPath = SojebStorage.url(
-        appConfig().storageUrl.video + createVideoDto.videoFile.originalname,
-      );
+      // const videoPath = SojebStorage.url(
+      //   appConfig().storageUrl.video + createVideoDto.videoFile.originalname,
+      // );
 
       // Upload thumbnail
       await SojebStorage.put(
         appConfig().storageUrl.thumbnail + createVideoDto.thumbnailFile.originalname,
         createVideoDto.thumbnailFile.buffer,
       );
-      const thumbnailPath = SojebStorage.url(
-        appConfig().storageUrl.thumbnail + createVideoDto.thumbnailFile.originalname,
-      );
+      // const thumbnailPath = SojebStorage.url(
+      //   appConfig().storageUrl.thumbnail + createVideoDto.thumbnailFile.originalname,
+      // );
 
       // Create video record in database
       const video = await this.prisma.video.create({
         data: {
           title: createVideoDto.title,
-          category: createVideoDto.category,
+          category: createVideoDto.category.toLowerCase(),
           description: createVideoDto.description,
-          videoUrl: videoPath,
-          thumbnailUrl: thumbnailPath,
+          video: createVideoDto.videoFile.originalname,
+          thumbnail: createVideoDto.thumbnailFile.originalname,
           status: createVideoDto.status,
         },
       });
@@ -48,10 +48,17 @@ export class VideoService {
   }
 
   async findAll() {
-    return this.prisma.video.findMany({
+    const data = await this.prisma.video.findMany({
       orderBy: {
         createdAt: 'desc',
       },
     });
+    // console.log(data)
+
+    return data.map(category => ({
+      ...category,
+      videoUrl: category.video ? `${process.env.APP_URL}/storage/video/${category.video}` : null,
+      thumbnailUrl: category.thumbnail ? `${process.env.APP_URL}/storage/thumbnail/${category.thumbnail}` : null
+    }));
   }
 }
