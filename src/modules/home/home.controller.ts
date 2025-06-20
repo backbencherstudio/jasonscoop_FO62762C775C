@@ -40,4 +40,20 @@ export class HomeController {
       return error.message;
     }
   }
+  
+  @Get('category/:id')
+  @UseGuards(JwtAuthGuard)
+  async findCategoryById(@Param('id') id: string) {
+    try {
+      const result = await this.homeService.findCategoryById(id);
+      if (!result) {
+        return { message: 'Category not found' };  // Return message if no category found
+      }
+      return result;
+    } catch (error) {
+      console.error(error);  // Log the error for more context
+      return { message: error.message };
+    }
+  }
+
 }

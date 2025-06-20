@@ -93,4 +93,20 @@ export class HomeService {
       imageUrl: category.image ? `${process.env.APP_URL}/storage/categories/${category.image}` : null
     }));
   }
+
+  async findCategoryById(id:string){
+    const result = await this.prisma.category.findUnique({
+      where: { id: id }  // Pass the string ID directly
+    });
+
+    if (!result) {
+      console.log('No category found with this ID');
+      return { message: 'Category not found' };  // You can return an appropriate message
+    }
+
+    return {
+      ...result,
+      imageUrl: result.image? `${process.env.APP_URL}/storage/categories/${result.image}` : null
+    }
+  }
 }

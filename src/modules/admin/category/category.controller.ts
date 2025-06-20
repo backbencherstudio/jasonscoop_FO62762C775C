@@ -48,7 +48,7 @@ export class CategoryController {
     try {
       const category = await this.categoryService.create({
         ...createCategoryDto,
-        image: file?.filename ? `/storage/categories/${file.filename}` : null
+        image: file?.filename ? `${file.filename}` : null
       });
       return category;
     } catch (error) {
