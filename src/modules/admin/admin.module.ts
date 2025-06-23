@@ -23,6 +23,8 @@ import { VideoModule } from './video/video.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { PaymentHistoryModule } from './payment-history/payment-history.module';
+import { ClientListModule } from './client-list/client-list.module';
+import { OrderListModule } from './order-list/order-list.module';
 
 @Module({
   imports: [
@@ -50,6 +52,8 @@ import { PaymentHistoryModule } from './payment-history/payment-history.module';
     AnalyticsModule,
     ScheduleModule,
     PaymentHistoryModule,
+    ClientListModule,
+    OrderListModule,
   ],
 })
 export class AdminModule {}
