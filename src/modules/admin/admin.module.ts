@@ -20,6 +20,7 @@ import { PayrollModule } from './payroll/payroll.module';
 import { ReturnProductModule } from './return-product/return-product.module';
 import { ReportModule } from './report/report.module';
 import { VideoModule } from './video/video.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { VideoModule } from './video/video.module';
     ReturnProductModule,
     ReportModule,
     VideoModule,
+    AnalyticsModule,
   ],
 })
 export class AdminModule {}

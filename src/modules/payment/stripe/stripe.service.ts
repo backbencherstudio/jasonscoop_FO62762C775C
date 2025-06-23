@@ -10,9 +10,6 @@ export class StripeService {
   async handleWebhook(rawBody: string, sig: string | string[]) {
     return StripePayment.handleWebhook(rawBody, sig);
   }
-
-  
-
   async createPlanPayment({
     amount,
     firstName,
@@ -25,6 +22,7 @@ export class StripeService {
     phoneNumber,
     country,
     paymentMethodId,
+    category,
     userId,
   }: {
     amount: number;
@@ -38,6 +36,7 @@ export class StripeService {
     phoneNumber: string;
     country: string;
     paymentMethodId: string;
+    category,
     userId: string;
   }) {
     try {
@@ -83,11 +82,14 @@ export class StripeService {
           email: email,
           phone_number: phoneNumber,
           country: country,
-          comments: `Occasion: ${occasion}, Description: ${description}, Recipient: ${recipientName || 'N/A'}, Delivery Deadline: ${deliveryDeadline}`,
+          occasion: occasion,
+          Recipient: recipientName || 'N/A',
+          delivery_Deadline: deliveryDeadline,
+          comments: description,
+          category: category
         },
       });
 
-      // console.log('Created order:', order);
 
       // Create transaction record with order ID
       await TransactionRepository.createTransaction({
@@ -106,6 +108,28 @@ export class StripeService {
         paymentIntentId: paymentIntent.id,
         paymentMethodId: paymentMethodId,
       });
+
+      // Update order and transaction status if payment succeeded
+      if (confirmedPayment.status === 'succeeded') {
+        await prisma.order.update({
+          where: { id: order.id },
+          data: {
+            status: 'completed',
+            payment_status: 'paid',
+            payment_raw_status: confirmedPayment.status,
+            paid_amount: confirmedPayment.amount / 100,
+            paid_currency: confirmedPayment.currency,
+          }
+        });
+
+        await TransactionRepository.updateTransaction({
+          reference_number: paymentIntent.id,
+          status: 'succeeded',
+          paid_amount: confirmedPayment.amount / 100,
+          paid_currency: confirmedPayment.currency,
+          raw_status: confirmedPayment.status,
+        });
+      }
 
       return {
         success: true,

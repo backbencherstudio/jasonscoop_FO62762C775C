@@ -3,6 +3,9 @@ import { StripeService } from './stripe.service';
 import { Request, Response } from 'express';
 import { TransactionRepository } from '../../../common/repository/transaction/transaction.repository';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 @Controller('payment/stripe')
 export class StripeController {
@@ -24,6 +27,7 @@ export class StripeController {
       phoneNumber: string;
       country: string;
       paymentMethodId: string;
+      category : string
     },
     @Req() req: Request,
   ) {
@@ -64,9 +68,27 @@ export class StripeController {
       switch (event.type) {
         case 'payment_intent.succeeded':
           const paymentIntent = event.data.object;
+          // Find order by payment reference number
+          const order = await prisma.order.findFirst({
+            where: { payment_reference_number: paymentIntent.id }
+          });
+          
+          if (order) {
+            await prisma.order.update({
+              where: { id: order.id },
+              data: {
+                status: 'completed',
+                payment_status: 'paid',
+                payment_raw_status: paymentIntent.status,
+                paid_amount: paymentIntent.amount / 100,
+                paid_currency: paymentIntent.currency,
+              }
+            });
+          }
+
           await TransactionRepository.updateTransaction({
             reference_number: paymentIntent.id,
-            status: 'succeeded',
+            status: 'completed',
             paid_amount: paymentIntent.amount / 100,
             paid_currency: paymentIntent.currency,
             raw_status: paymentIntent.status,

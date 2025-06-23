@@ -610,6 +610,10 @@ model Order {
   zip_code     String?
   country      String?
   comments     String?
+  occasion     String?
+  Recipient    String?
+  delivery_Deadline String? 
+  category     String?
 
   order_coupons        OrderCoupon[]
   order_items          OrderItem[]

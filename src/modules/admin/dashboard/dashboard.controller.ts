@@ -24,6 +24,34 @@ export class DashboardController {
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
   ) {
-    return this.dashboardService.findAll(user_id, startDate, endDate);
+    try {
+      return this.dashboardService.findAll(user_id, startDate, endDate);
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  @ApiOperation({ summary: 'Get income analytics data' })
+  @Get('/analytics-income')
+  @ApiQuery({ 
+    name: 'period', 
+    required: true, 
+    enum: ['1 month', '6 months', '1 year'],
+    description: 'Time period for analytics (1 month, 6 months, or 1 year)' 
+  })
+  async findOverrallIncome(
+    @Query('period') period: string,
+  ) {
+    try {
+      return this.dashboardService.findOverrallIncome(period);
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
   }
 }
