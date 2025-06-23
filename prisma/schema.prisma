@@ -614,6 +614,7 @@ model Order {
   Recipient    String?
   delivery_Deadline String? 
   category     String?
+  working_status  String? @default("In Progress")
 
   order_coupons        OrderCoupon[]
   order_items          OrderItem[]
