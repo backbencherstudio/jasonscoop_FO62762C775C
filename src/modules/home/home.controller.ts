@@ -8,7 +8,6 @@ export class HomeController {
   constructor(private readonly homeService: HomeService) {}
 
   @Get('videos')
-  @UseGuards(JwtAuthGuard)
   async findAllVideos(
     @Query('category') category?:string,
     @Query('search') search?:string,
@@ -32,7 +31,6 @@ export class HomeController {
   }
 
   @Get('category')
-  @UseGuards(JwtAuthGuard)
   async findAllCategory(){
     try {
       return this.homeService.findAllCategory();
@@ -42,7 +40,6 @@ export class HomeController {
   }
   
   @Get('category/:id')
-  @UseGuards(JwtAuthGuard)
   async findCategoryById(@Param('id') id: string) {
     try {
       const result = await this.homeService.findCategoryById(id);

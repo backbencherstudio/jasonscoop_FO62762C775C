@@ -48,4 +48,21 @@ export class ScheduleService {
         };
       }
     }
+
+
+    async liveShowList(){
+      try {
+        const list = await this.prisma.order.findMany({
+          where:{
+            category: "Live Show"
+          }
+        })
+        return list;
+      } catch (error) {
+        return{
+          success: false,
+          message: error.message
+        }
+      }
+    }
   }

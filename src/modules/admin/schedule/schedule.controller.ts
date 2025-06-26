@@ -37,4 +37,16 @@ export class ScheduleController {
       };
     }
   }
+
+  @Get('liveshowlist')
+  async liveShowList(){
+    try {
+      return this.scheduleService.liveShowList();
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
 }

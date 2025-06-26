@@ -8,6 +8,11 @@ export class OrderListService {
   async findAll() {
     try {
       const orders = await this.prisma.order.findMany({
+        where:{
+          category: {
+            not: "Live Show"
+          }
+        },
         select: {
           id: true,
           created_at: true,
@@ -54,4 +59,6 @@ export class OrderListService {
       }
     }
   }
+
+  
 }
