@@ -4,6 +4,13 @@ import { IsString, IsEnum } from 'class-validator';
 
 
 export class CreateVideoDto {
+
+  @IsString()
+  userId: string
+  
+  @IsString()
+  orderId: string
+
   @IsString()
   title: string;
 
@@ -14,7 +21,7 @@ export class CreateVideoDto {
   description: string;
 
   @IsString()
-  status: string;
+  working_status: string;
 
   // Remove all validation decorators for these:
   videoFile?: Express.Multer.File;

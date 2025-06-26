@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Video" ALTER COLUMN "orderId" DROP NOT NULL,
+ALTER COLUMN "userId" DROP NOT NULL;

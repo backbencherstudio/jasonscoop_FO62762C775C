@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { OrderListService } from './order-list.service';
 import { Role } from '../../../common/guard/role/role.enum';
 import { Roles } from '../../../common/guard/role/roles.decorator';
@@ -20,6 +20,19 @@ export class OrderListController {
         success : false,
         message : error.message
       }
+    }
+  }
+
+  @Get('/:id')
+  async findItemById(@Param('id') id:string){
+    try {
+      const data = await this.orderListService.findItemById(id);
+      return data;
+    } catch (error) {
+      return{
+        success: false,
+        message: error.message
+      }      
     }
   }
 }

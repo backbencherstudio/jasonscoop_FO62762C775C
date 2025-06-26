@@ -37,11 +37,20 @@ export class VideoService {
           description: createVideoDto.description,
           video: createVideoDto.videoFile.originalname,
           thumbnail: createVideoDto.thumbnailFile.originalname,
-          status: createVideoDto.status,
+          userId: createVideoDto.userId,
+          orderId: createVideoDto.orderId
         },
       });
 
-      return video;
+      await this.prisma.order.update({
+        where:{id: createVideoDto.orderId},
+        data : {working_status : createVideoDto.working_status}
+      })
+
+      return {
+        success: true,
+        message: 'video uploaded successfully'
+      };
     } catch (error) {
       throw new BadRequestException(error.message);
     }

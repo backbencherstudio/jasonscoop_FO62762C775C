@@ -12,7 +12,7 @@ export class OrderListService {
           id: true,
           created_at: true,
           total_amount: true,
-          status: true,
+          working_status: true,
           payment_status: true,
           user: {
             select: {
@@ -35,6 +35,23 @@ export class OrderListService {
         success: false,
         message: error.message
       };
+    }
+  }
+
+
+  async findItemById(id:string){
+    try {
+      const orderDetails = await this.prisma.order.findUnique({
+        where:{
+          id:id
+        }
+      })
+      return orderDetails;
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
+      }
     }
   }
 }
