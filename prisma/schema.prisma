@@ -351,6 +351,12 @@ model Category {
   description        String?
   image              String?
   parent_id          String?
+  price              String?
+  deliveryTIme       String?
+  rating             Int?
+  reviewNumber       Int?
+
+
   product_categories ProductCategory[]
 
   @@map("categories")
@@ -614,6 +620,7 @@ model Order {
   Recipient    String?
   delivery_Deadline String? 
   category     String?
+  type         String?
   working_status  String? @default("In Progress")
 
   order_coupons        OrderCoupon[]

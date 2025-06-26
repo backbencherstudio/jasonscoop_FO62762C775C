@@ -13,8 +13,6 @@ import { Roles } from 'src/common/guard/role/roles.decorator';
 export class PaymentHistoryController {
   constructor(private readonly paymentHistoryService: PaymentHistoryService) {}
 
-  
-
   @Get()
   findAll() {
     try {
@@ -26,6 +24,5 @@ export class PaymentHistoryController {
       }
     }
   }
-
   
 }

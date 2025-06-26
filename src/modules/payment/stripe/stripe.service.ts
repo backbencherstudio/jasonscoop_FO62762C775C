@@ -24,6 +24,7 @@ export class StripeService {
     paymentMethodId,
     category,
     userId,
+    type
   }: {
     amount: number;
     firstName: string;
@@ -38,6 +39,7 @@ export class StripeService {
     paymentMethodId: string;
     category,
     userId: string;
+    type:string
   }) {
     try {
       
@@ -86,7 +88,8 @@ export class StripeService {
           Recipient: recipientName || 'N/A',
           delivery_Deadline: deliveryDeadline,
           comments: description,
-          category: category
+          category: category,
+          type: type
         },
       });
 

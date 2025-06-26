@@ -20,7 +20,11 @@ export class CategoryService extends PrismaClient {
       const data = {
         name,
         description,
-        image: createCategoryDto.image
+        image: createCategoryDto.image,
+        price: createCategoryDto.price,
+        deliveryTIme: createCategoryDto.deliveryTIme,
+        rating: createCategoryDto.rating,
+        reviewNumber: createCategoryDto.reviewNumber
       };
       const response = await this.prisma.category.create({
         data

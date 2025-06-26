@@ -78,14 +78,7 @@ export class HomeService {
   }
 
   async findAllCategory(){
-    const data = await this.prisma.category.findMany({
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        image: true  // Include the image field
-      }
-    });
+    const data = await this.prisma.category.findMany();
     
     // Add full URL to each image
     return data.map(category => ({

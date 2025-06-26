@@ -25,6 +25,7 @@ import { LogisticsVerificationModule } from './modules/admin/logistics-verificat
 import { SettingsModule } from './modules/settings/settings.module';
 import { TrafficSourcesModule } from './modules/traffic-sources/traffic-sources.module';
 import { HomeModule } from './modules/home/home.module';
+import { DashboardModule } from './modules/user-dashboard/dashboard/dashboard.module';
 
 
 @Module({
@@ -79,6 +80,7 @@ import { HomeModule } from './modules/home/home.module';
     SettingsModule,
     TrafficSourcesModule,
     HomeModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [

@@ -27,7 +27,8 @@ export class StripeController {
       phoneNumber: string;
       country: string;
       paymentMethodId: string;
-      category : string
+      category : string;
+      type: string
     },
     @Req() req: Request,
   ) {
