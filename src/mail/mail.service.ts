@@ -36,6 +36,10 @@ export class MailService {
   // send otp code for email verification
   async sendOtpCodeToEmail({ name, email, otp }) {
     try {
+      if (!email || !otp) {
+        throw new Error('Email and OTP are required');
+      }
+
       const from = `${process.env.APP_NAME} <${appConfig().mail.from}>`;
       const subject = 'Email Verification';
 
@@ -46,7 +50,7 @@ export class MailService {
         subject: subject,
         template: 'email-verification',
         context: {
-          name: name,
+          name: name || 'User',
           otp: otp,
         },
       });

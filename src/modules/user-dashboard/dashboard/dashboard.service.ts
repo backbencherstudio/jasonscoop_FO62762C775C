@@ -130,8 +130,8 @@ export class DashboardService {
       })
       return allvideoData.map(category => ({
         ...category,
-        videoUrl: category.video ? `${process.env.APP_URL}/storage/video/${category.video}` : null,
-        thumbnailUrl: category.thumbnail ? `${process.env.APP_URL}/storage/thumbnail/${category.thumbnail}` : null
+        videoUrl: category.video ? `${process.env.BACKEND_APP_URL}/storage/video/${category.video}` : null,
+        thumbnailUrl: category.thumbnail ? `${process.env.BACKEND_APP_URL}/storage/thumbnail/${category.thumbnail}` : null
       }));
     } catch (error) {
       return {

@@ -48,8 +48,8 @@ export class HomeService {
       return {
         data: data.map(category => ({
           ...category,
-          videoUrl: category.video ? `${process.env.APP_URL}/storage/video/${category.video}` : null,
-          thumbnailUrl: category.thumbnail ? `${process.env.APP_URL}/storage/thumbnail/${category.thumbnail}` : null
+          videoUrl: category.video ? `${process.env.BACKEND_APP_URL}/storage/video/${category.video}` : null,
+          thumbnailUrl: category.thumbnail ? `${process.env.BACKEND_APP_URL}/storage/thumbnail/${category.thumbnail}` : null
         })),
         total: totalCount,
         page,
@@ -72,8 +72,8 @@ export class HomeService {
     
     return {
       ...video,
-      videoUrl: video?.video? `${process.env.APP_URL}/storage/video/${video.video}` : null,
-      thumbnailUrl: video?.thumbnail ? `${process.env.APP_URL}/storage/thumbnail/${video.thumbnail}` : null
+      videoUrl: video?.video? `${process.env.BACKEND_APP_URL}/storage/video/${video.video}` : null,
+      thumbnailUrl: video?.thumbnail ? `${process.env.BACKEND_APP_URL}/storage/thumbnail/${video.thumbnail}` : null
     };
   }
 
@@ -83,7 +83,7 @@ export class HomeService {
     // Add full URL to each image
     return data.map(category => ({
       ...category,
-      imageUrl: category.image ? `${process.env.APP_URL}/storage/categories/${category.image}` : null
+      imageUrl: category.image ? `${process.env.BACKEND_APP_URL}/storage/categories/${category.image}` : null
     }));
   }
 
@@ -99,7 +99,7 @@ export class HomeService {
 
     return {
       ...result,
-      imageUrl: result.image? `${process.env.APP_URL}/storage/categories/${result.image}` : null
+      imageUrl: result.image? `${process.env.BACKEND_APP_URL}/storage/categories/${result.image}` : null
     }
   }
 }
