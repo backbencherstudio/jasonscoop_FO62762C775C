@@ -28,14 +28,12 @@ export class CreateCategoryDto {
   deliveryTIme: string;
   
   @IsOptional()
-  @IsNumber()
-  @Min(1)
-  @Max(5)
-  rating: number;
+  @IsString()
+  rating: string;
   
   @IsOptional()
-  @IsNumber()
-  reviewNumber: number;
+  @IsString()
+  reviewNumber: string;
 
   @ApiProperty({
     description: 'Category image file',

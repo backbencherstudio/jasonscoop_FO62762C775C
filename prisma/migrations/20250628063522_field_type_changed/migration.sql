@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "categories" ALTER COLUMN "rating" SET DATA TYPE TEXT,
+ALTER COLUMN "reviewNumber" SET DATA TYPE TEXT;

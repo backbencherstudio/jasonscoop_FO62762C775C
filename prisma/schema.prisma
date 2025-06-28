@@ -354,8 +354,8 @@ model Category {
   parent_id          String?
   price              String?
   deliveryTIme       String?
-  rating             Int?
-  reviewNumber       Int?
+  rating             String?
+  reviewNumber       String?
 
 
   product_categories ProductCategory[]
