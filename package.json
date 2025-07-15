@@ -24,6 +24,7 @@
   "dependencies": {
     "@casl/ability": "6.7.3",
     "@casl/prisma": "1.5.1",
+    "@css-inline/css-inline": "^0.15.0",
     "@nestjs-modules/mailer": "2.0.2",
     "@nestjs/bullmq": "11.0.1",
     "@nestjs/common": "11.0.7",

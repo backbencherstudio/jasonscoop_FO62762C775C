@@ -42,17 +42,18 @@ export class StripeService {
     type:string
   }) {
     try {
-      
+      console.log('userId2',userId)
       // Create or get customer
       const customer = await StripePayment.createCustomer({
         user_id: email,
         name: `${firstName} ${lastName}`,
         email: email,
       });
-
+      console.log('customer',customer)
       // Create payment intent with metadata
       const paymentIntent = await StripePayment.createPaymentIntent({
-        amount,
+        // StripePayment.createPaymentIntent already converts dollars to cents internally
+        amount: amount,
         currency: 'usd',
         customer_id: customer.id,
         metadata: {
@@ -69,7 +70,7 @@ export class StripeService {
           allow_redirects: 'never'
         }
       });
-
+      console.log('paymentIntent',paymentIntent)
       // Create order record first
       const order = await prisma.order.create({
         data: {
@@ -92,7 +93,7 @@ export class StripeService {
           type: type
         },
       });
-
+      console.log('order',order)
 
       // Create transaction record with order ID
       await TransactionRepository.createTransaction({
@@ -105,13 +106,13 @@ export class StripeService {
         provider: 'stripe',
         user_id: userId
       });
-
+      // console.log('transaction',transaction)
       // Confirm payment with payment method
       const confirmedPayment = await StripePayment.confirmPayment({
         paymentIntentId: paymentIntent.id,
         paymentMethodId: paymentMethodId,
       });
-
+      console.log('confirmedPayment',confirmedPayment)
       // Update order and transaction status if payment succeeded
       if (confirmedPayment.status === 'succeeded') {
         await prisma.order.update({

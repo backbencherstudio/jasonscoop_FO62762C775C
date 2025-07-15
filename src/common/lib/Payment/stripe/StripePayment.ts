@@ -150,7 +150,9 @@ export class StripePayment {
     };
   }): Promise<stripe.PaymentIntent> {
     return Stripe.paymentIntents.create({
-      amount: amount * 100, // amount in cents
+      // Stripe requires the amount to be an integer in the smallest currency unit (cents).
+      // Use Math.round to avoid floating-point precision issues (e.g. 19.99 * 100 → 1998.999999).
+      amount: Math.round(amount * 100),
       currency: currency,
       customer: customer_id,
       metadata: metadata,

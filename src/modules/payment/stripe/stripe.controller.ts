@@ -34,14 +34,19 @@ export class StripeController {
   ) {
     // Get user ID from JWT token
     const userId = req.user.userId;
+    console.log('userId',paymentData.paymentMethodId)
 
     try{
       return this.stripeService.createPlanPayment({
         ...paymentData,
         userId,
       });
-    }catch(error){
-      return error.message
+    }catch(error: any) {
+      console.error('Stripe error', error?.raw ?? error);
+      return {
+        success: false,
+        message: error?.raw?.message ?? error.message,
+      };
     }
 
   }
